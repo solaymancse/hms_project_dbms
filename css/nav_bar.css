@@ -1,0 +1,63 @@
+
+.nav_bar{
+    height: 8vh;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: rgb(24, 168, 224);
+
+
+    position: sticky;
+    top: 0px;
+}
+
+
+.logo{
+    height: 100%;
+    width: 500px;
+    
+}
+
+.logo img{
+    height: 100%;
+    width: auto;
+}
+
+.logo span{
+    font-size: 20px;
+    font-family: Showcard Gothic;
+}
+
+
+.menu{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-right: 20px;
+}
+
+.menu div{
+    margin: 0px 20px;
+}
+
+.dropdown_style{
+    background-color: transparent;
+}
+
+.f_color{
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+.f_color:hover{
+    color: black;
+}
+
+
+
+
