@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>healthcare_provider</title>
+    <title>Add New Employee</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Fontawesome CDN Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
@@ -64,12 +64,10 @@
             $dob = $_POST['e_DOB'];
             $qual = $_POST['e_qualification'];
             $p_num = $_POST['e_phone_number'];
-            $e_id = $_POST['e_id'];
 
 
-            $sql = "INSERT INTO employee(employee_id, first_name, last_name
-                        email, DOB, e_type , qualification, phone_number) VALUES
-                        ('$e_id', '$f_name', '$l_name', '$email' , '$dob' , '$type', '$qual', '$p_num')";
+            $sql = "INSERT INTO employee(first_name, last_name,email, DOB, e_type , qualification, phone_number) VALUES
+                        ('$f_name', '$l_name', '$email' , '$dob' , '$type', '$qual', '$p_num')";
 
             $result = mysqli_query($conn, $sql);
 
@@ -99,7 +97,7 @@
 
     <?php
     
-        include'employee_sidebar.php';
+        include'../new_sidebar.php';
         include'../new_navbar.php';
     
     ?>
@@ -115,17 +113,6 @@
 
            
                 <form action="" method="post">
-
-
-                    <!-- <div class="form-floating mb-5">
-                        <input class="form-control" placeholder="Leave a comment here" id="floatingTextarea">
-                        <label for="floatingTextarea">Comments</label>
-                    </div> -->
-                    <div class="form-floating mb-3">
-                                <input name="e_id" type="number" class="form-control" placeholder="Leave a comment here" id="floatingTextarea">
-                                <label for="floatingTextarea">Employee ID</label>
-                    </div>
-
 
                     <div class="row g-2 mb-3">
                         <div class="col-md ">

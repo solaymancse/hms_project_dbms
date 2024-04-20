@@ -79,7 +79,12 @@
                 Employee
               </div>
               <li class="item">
-                <a href="#"><i class="fa-solid fa-address-card fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+                <a href="employee/all_employee.php"><i class="fa-solid fa-address-card fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+                All Employee</a>
+              </li>
+              
+              <li class="item">
+                <a href="receptionist.php"><i class="fa-solid fa-address-card fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
                 Reseptionist</a>
               </li>
               
@@ -95,12 +100,20 @@
           </li>
           
           <li class="item">
-            <a href="#"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+            <a href="paitient/patient.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
             Patient</a>
           </li>
           <li class="item">
-            <a href="./employee_leave/employee_leave.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+            <a href="employee_leave/employee_leave.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
             Employee Leave</a>
+          </li>
+          <li class="item">
+            <a href="salary/all_salary.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+            Salary</a>
+          </li>
+          <li class="item">
+            <a href="lab.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+            Lab Test</a>
           </li>
 
         </ul>

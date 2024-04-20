@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>healthcare_provider</title>
+    <title>Employee List</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Fontawesome CDN Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
@@ -30,9 +30,8 @@
                     $search= $_POST['input_search'];
                 }
 
-                $sql= "SELECT h_provider_id, first_name, last_name, type, email, gender, DOB
-                    FROM healthcare_provider
-                    WHERE h_provider_id LIKE '%$search%' OR first_name LIKE '%$search%' OR last_name LIKE '%$search%'";
+                $sql= "SELECT * from employee";
+                    
 
                 $result_table= mysqli_query($conn, $sql);
 
@@ -47,7 +46,7 @@
 
     <?php
     
-        include'employee_sidebar.php';
+        include'../new_sidebar.php';
         include'../new_navbar.php';
     
     ?>
@@ -96,12 +95,13 @@
         <table class="table table-hover text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">Employee ID</th>
                         <th scope="col">Name</th>
                         <th scope="col">Type</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Gender</th>
                         <th scope="col">Date of Birth</th>
+                        <th scope="col">Qualification</th>
+                        <th scope="col">Phone Number</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -116,16 +116,17 @@
 
 
                                 <tr>
-                                    <td><?php echo $row['h_provider_id'] ?></th>
+                                    <td><?php echo $row['id'] ?></th>
                                     <td><?php echo $row['first_name'] . " ". $row['last_name'] ?></th>
-                                    <td><?php echo $row['type'] ?></th>
+                                    <td><?php echo $row['e_type'] ?></th>
                                     <td><?php echo $row['email'] ?></th>
-                                    <td><?php echo $row['gender'] ?></th>
                                     <td><?php echo $row['DOB'] ?></th>
+                                    <td><?php echo $row['qualification'] ?></th>
+                                    <td><?php echo $row['phone_number'] ?></th>
                                     <td>
                                         
-                                    <a href="edit.php?id=<?php echo $row['h_provider_id']?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                                    <a href="delete.php?id=<?php echo $row['h_provider_id']?>"  class="btn btn-danger"><i class="fa-solid fa-trash fs-5"></i></a>
+                                    <a href="update_employee.php?id=<?php echo $row['id']?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
+                                    <a href="delete.php?id=<?php echo $row['id']?>"  class="btn btn-danger"><i class="fa-solid fa-trash fs-5"></i></a>
 
                                     </td>
 

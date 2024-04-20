@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>healthcare_provider</title>
+    <title>Employee Leave</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Fontawesome CDN Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
@@ -15,27 +14,7 @@
     <link rel="stylesheet" href="../structure_css.css">
 
 
-    <style>
-        .table tbody td:nth-child(4) {
-            max-width: 300px;
-            text-align: justify;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-
-        .table tbody td {
-            max-height: 300px;
-
-            border: 1px solid black;
-        }
-    </style>
-
-
 </head>
-
-
-
-
 
 <?php
 
@@ -47,14 +26,12 @@ if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
 }
 
-$sql = "SELECT * FROM notice ORDER BY publish_date DESC";
+$sql = "SELECT * FROM employee_leave";
 
 $result_table = mysqli_query($conn, $sql);
 
 
 ?>
-
-
 
 <body>
 
@@ -66,7 +43,6 @@ $result_table = mysqli_query($conn, $sql);
     include '../new_navbar.php';
 
     ?>
-
 
     <!-- main work start-->
 
@@ -82,7 +58,7 @@ $result_table = mysqli_query($conn, $sql);
             if (isset($_GET['msg'])) {
 
                 $msg = $_GET['msg'];
-                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                 ' . $msg . '
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
@@ -93,7 +69,7 @@ $result_table = mysqli_query($conn, $sql);
 
 
             <div class="search_and-add_btn">
-                <a href="add_notice.php" class="btn btn-dark mb-4">Add New Notice</a>
+                <a href="add_emp_leave.php" class="btn btn-dark mb-4">Add New</a>
 
                 <form action="" class="d-flex" method="post">
                     <input style="border: 1px solid black;" name="input_search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -110,11 +86,12 @@ $result_table = mysqli_query($conn, $sql);
             <table class="table table-hover text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">Notice ID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Description</th>
 
+                        <th scope="col">Employee ID</th>
+                        <th scope="col">Heath Provider ID</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Leave Reason</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -129,13 +106,16 @@ $result_table = mysqli_query($conn, $sql);
 
 
                         <tr>
-                            <td><?php echo $row['id'] ?></th>
-                            <td><?php echo $row['title'] ?></th>
-                            <td><?php echo date('d-m-Y', strtotime($row['publish_date'])); ?></td>
-                            <td><?php echo $row['description'] ?></th>
+                            <td><?php echo $row['employee_id'] ?></th>
+                            <td><?php echo $row['h_provider_id'] ?></th>
+
+                            <td><?php echo $row['start_date'] ?></th>
+                            <td><?php echo $row['end_date'] ?></th>
+                            <td><?php echo $row['leave_reason'] ?></th>
+
                             <td>
 
-                                <a href="update_notice.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
+                                <a href="emp_leave_edit.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
                                 <button type="button" class="btn btn-danger delete-leave" data-id="<?php echo $row['id'] ?>" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="fa-solid fa-trash fs-5"></i></button>
 
                             </td>
@@ -151,7 +131,12 @@ $result_table = mysqli_query($conn, $sql);
 
                 </tbody>
             </table>
-        
+            <div>
+
+            </div>
+
+
+
 
 
 
@@ -159,8 +144,7 @@ $result_table = mysqli_query($conn, $sql);
 
     <!-- main work end-->
 
-
-
+    <!-- sidebar and navbar js file start -->
     <!-- Add this modal at the end of your HTML body -->
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -170,7 +154,7 @@ $result_table = mysqli_query($conn, $sql);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this Notice?
+                    Are you sure you want to delete this Record?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -179,6 +163,7 @@ $result_table = mysqli_query($conn, $sql);
             </div>
         </div>
     </div>
+
 
 
     <script>
@@ -191,14 +176,12 @@ $result_table = mysqli_query($conn, $sql);
 
                     document.getElementById('confirmDelete').addEventListener('click', function() {
                         // Redirect to delete script with the deleteId parameter
-                        window.location.href = `delete_notice.php?id=${deleteId}`;
+                        window.location.href = `epm_delete.php?id=${deleteId}`;
                     });
                 });
             });
         });
     </script>
-    <!-- sidebar and navbar js file start -->
-
     <script>
         const sidebar = document.querySelector(".sidebar");
         const sidebarClose = document.querySelector("#sidebar-close");

@@ -15,22 +15,6 @@
     <link rel="stylesheet" href="../structure_css.css">
 
 
-    <style>
-        .table tbody td:nth-child(4) {
-            max-width: 300px;
-            text-align: justify;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-
-        .table tbody td {
-            max-height: 300px;
-
-            border: 1px solid black;
-        }
-    </style>
-
-
 </head>
 
 
@@ -38,6 +22,7 @@
 
 
 <?php
+session_start();
 
 include '../connection.php';
 
@@ -47,7 +32,9 @@ if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
 }
 
-$sql = "SELECT * FROM notice ORDER BY publish_date DESC";
+$sql = "SELECT lab_test.id, patient.first_name , patient.last_name AS patient_name, healthcare_provider.first_name , healthcare_provider.last_name AS provider_name, lab_test.title, lab_test.STATUS, lab_test.discount FROM lab_test
+        LEFT JOIN patient ON lab_test.patient_id = patient.id
+        LEFT JOIN healthcare_provider ON lab_test.h_provider_id = healthcare_provider.id";
 
 $result_table = mysqli_query($conn, $sql);
 
@@ -78,22 +65,19 @@ $result_table = mysqli_query($conn, $sql);
         <div class="container">
 
             <?php
-
-            if (isset($_GET['msg'])) {
-
-                $msg = $_GET['msg'];
-                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                ' . $msg . '
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            if (isset($_SESSION['data'])) {
+                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    ' . $_SESSION['data'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
+                unset($_SESSION['data']);
             }
-
-
             ?>
 
 
             <div class="search_and-add_btn">
-                <a href="add_notice.php" class="btn btn-dark mb-4">Add New Notice</a>
+
+                <a href="add_new_lab.php" class="btn btn-dark mb-4">Add New</a>
 
                 <form action="" class="d-flex" method="post">
                     <input style="border: 1px solid black;" name="input_search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -110,11 +94,12 @@ $result_table = mysqli_query($conn, $sql);
             <table class="table table-hover text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">Notice ID</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Health Provider</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Description</th>
-
+                        <th scope="col">Staus</th>
+                        <th scope="col">Discount</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -130,15 +115,18 @@ $result_table = mysqli_query($conn, $sql);
 
                         <tr>
                             <td><?php echo $row['id'] ?></th>
+                            <td><?php echo $row['patient_name'] ?></th>
+                            <td><?php echo $row['provider_name'] ?></th>
+
+
                             <td><?php echo $row['title'] ?></th>
-                            <td><?php echo date('d-m-Y', strtotime($row['publish_date'])); ?></td>
-                            <td><?php echo $row['description'] ?></th>
+                            <td><?php echo $row['STATUS'] ?></th>
+                            <td><?php echo $row['discount'] ?></th>
                             <td>
-
-                                <a href="update_notice.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                                <button type="button" class="btn btn-danger delete-leave" data-id="<?php echo $row['id'] ?>" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="fa-solid fa-trash fs-5"></i></button>
-
+                                <a href="./edit_lab.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
+                                <a href="#" class="btn btn-danger delete-patient" data-id="<?php echo $row['id'] ?>"><i class="fa-solid fa-trash fs-5"></i></a>
                             </td>
+
 
                         <tr>
 
@@ -151,7 +139,13 @@ $result_table = mysqli_query($conn, $sql);
 
                 </tbody>
             </table>
-        
+            <div>
+
+            </div>
+
+
+
+
 
 
 
@@ -161,42 +155,29 @@ $result_table = mysqli_query($conn, $sql);
 
 
 
-    <!-- Add this modal at the end of your HTML body -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this Notice?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const deleteButtons = document.querySelectorAll('.delete-leave');
+            const deleteButtons = document.querySelectorAll('.delete-patient');
 
             deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const deleteId = button.getAttribute('data-id');
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior
 
-                    document.getElementById('confirmDelete').addEventListener('click', function() {
-                        // Redirect to delete script with the deleteId parameter
-                        window.location.href = `delete_notice.php?id=${deleteId}`;
-                    });
+                    const patientId = button.getAttribute('data-id');
+
+                    // Ask for confirmation before deleting
+                    const isConfirmed = confirm('Are you sure you want to delete this patient?');
+
+                    if (isConfirmed) {
+                        // Redirect to delete_patient.php with patient_id parameter
+                        window.location.href = `./patient_delete.php?id=${patientId}`;
+                    }
                 });
             });
         });
     </script>
+
     <!-- sidebar and navbar js file start -->
 
     <script>
