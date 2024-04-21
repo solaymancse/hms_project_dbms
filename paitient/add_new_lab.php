@@ -116,7 +116,7 @@ if (isset($_POST['submit'])) {
                             while ($row = mysqli_fetch_assoc($patientResult)) {
 
                             ?>
-                                <option selected>Select</option>
+                              
                                 <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
                             <?php
                             }
@@ -132,7 +132,7 @@ if (isset($_POST['submit'])) {
                             while ($row = mysqli_fetch_assoc($hProviderResult)) {
 
                             ?>
-                                <option selected>Select</option>
+                               
                                 <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
                             <?php
                             }
@@ -145,11 +145,11 @@ if (isset($_POST['submit'])) {
 
                 <div class="form-group">
                     <label for="email">Title</label>
-                    <input type="number" class="form-control" name="title">
+                    <input type="text" class="form-control" name="title">
                 </div>
                 <div class="form-group">
                     <label for="address">Status :</label>
-                    <input type="number" class="form-control" name="status">
+                    <input type="text" class="form-control" name="status">
                 </div>
                 <div class="form-group">
                     <label for="income">discount</label>

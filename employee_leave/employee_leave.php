@@ -26,7 +26,22 @@ if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
 }
 
-$sql = "SELECT * FROM employee_leave";
+$sql = "SELECT 
+            el.id,
+            e.first_name AS employee_first_name,
+            e.last_name AS employee_last_name,
+            hp.first_name AS provider_first_name,
+            hp.last_name AS provider_last_name,
+            el.start_date,
+            el.end_date,
+            el.leave_reason
+        FROM 
+            employee_leave AS el
+        LEFT JOIN 
+            employee AS e ON el.employee_id = e.id
+        LEFT JOIN 
+            healthcare_provider AS hp ON el.h_provider_id = hp.id";
+
 
 $result_table = mysqli_query($conn, $sql);
 
@@ -106,8 +121,8 @@ $result_table = mysqli_query($conn, $sql);
 
 
                         <tr>
-                            <td><?php echo $row['employee_id'] ?></th>
-                            <td><?php echo $row['h_provider_id'] ?></th>
+                            <td><?php echo $row['employee_first_name'] . ' ' . $row['employee_last_name']; ?></td>
+                            <td><?php echo $row['provider_first_name'] . ' ' . $row['provider_last_name']; ?></td>
 
                             <td><?php echo $row['start_date'] ?></th>
                             <td><?php echo $row['end_date'] ?></th>

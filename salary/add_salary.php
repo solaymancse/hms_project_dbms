@@ -100,27 +100,37 @@
 include '../connection.php';
 
 
+$empData = "SELECT * FROM employee";
+$empResult = mysqli_query($conn, $empData);
+
+$hProviderData = "SELECT * FROM healthcare_provider";
+$hProviderResult = mysqli_query($conn, $hProviderData);
 
 if (isset($_POST['submit'])) {
 
 
-    $title = $_POST['title'];
-    $date = $_POST['date'];
-    $description = $_POST['description'];
+    $employee_id = $_POST['employee_id'];
+    $h_provider_id = $_POST['h_provider_id'];
+    $amount = $_POST['amount'];
+    $status = $_POST['status'];
+    $paid_amount = $_POST['paid_amount'];
+    $due_amount = $_POST['due_amount'];
+    $salary_date = $_POST['salary_date'];
 
 
-    $sql = "INSERT INTO notice (title, publish_date, description) VALUES ('$title', '$date', '$description')";
+    $sql = "INSERT INTO salary (employee_id, h_provider_id, amount, salary_status, paid_amount, due_amount, salary_date) VALUES ('$employee_id', '$h_provider_id', '$amount','$status', '$paid_amount', '$due_amount','$salary_date')";
 
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
         // header("Location: healthcare_provider.php?msg=Record add successful");
         session_reset();
-        $_SESSION['data'] = "Record add successful";
-        echo "<script>window.location.href='all_notice.php' </script>";
+        $_SESSION['data'] = "New Salary add successful";
+        echo "<script>window.location.href='all_salary.php' </script>";
         // $success_message = "successful";
     } else {
-        $success_message = "not insert";
+        $_SESSION['data'] = "New Salary add failed";
+        // $success_message = "failed";
     }
 }
 
@@ -151,53 +161,43 @@ if (isset($_POST['submit'])) {
 
 
             <div class="form-wrap">
-                <form id="survey-form">
+                
+                <form action="" method="post">
                     <div class="row">
                         <div class="col-md-6">
-                        <div class="form-group">
-                                <label>current role</label>
-                                <select id="dropdown" name="role" class="form-control" required>
+                            <div class="form-group">
+                                <label>Employee</label>
+                                <select id="dropdown" name="employee_id" class="form-control" required>
                                     <option disabled selected value>Select</option>
-                                    <option value="student">Student</option>
-                                    <option value="job">Full Time Job</option>
-                                    <option value="learner">Full Time Learner</option>
-                                    <option value="preferNo">Prefer not to say</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                        <div class="form-group">
-                                <label>current role</label>
-                                <select id="dropdown" name="role" class="form-control" required>
-                                    <option disabled selected value>Select</option>
-                                    <option value="student">Student</option>
-                                    <option value="job">Full Time Job</option>
-                                    <option value="learner">Full Time Learner</option>
-                                    <option value="preferNo">Prefer not to say</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                                    <?php
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label id="number-label" for="number">Age <small>(optional)</small></label>
-                                <input type="number" name="age" id="number" min="10" max="99" class="form-control" placeholder="Age">
+                                    while ($row = mysqli_fetch_assoc($empResult)) {
+
+                                    ?>
+                                     
+                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>current role</label>
-                                <select id="dropdown" name="role" class="form-control" required>
-                                    <option disabled selected value>Select</option>
-                                    <option value="student">Student</option>
-                                    <option value="job">Full Time Job</option>
-                                    <option value="learner">Full Time Learner</option>
-                                    <option value="preferNo">Prefer not to say</option>
-                                    <option value="other">Other</option>
+                                <label>Provider</label>
+                                <select id="dropdown" name="h_provider_id" class="form-control" required>
+                                    <?php
+
+                                    while ($row = mysqli_fetch_assoc($hProviderResult)) {
+
+                                    ?>
+                                      
+                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+
                                 </select>
                             </div>
                         </div>
@@ -206,50 +206,50 @@ if (isset($_POST['submit'])) {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Would you recommend survey to a friend?</label>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline1" value="Definitely" name="customRadioInline1" class="custom-control-input" checked="">
-                                    <label class="custom-control-label" for="customRadioInline1">Definitely</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline2" value="Maybe" name="customRadioInline1" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline2">Maybe</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline3" value="Not sure" name="customRadioInline1" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline3">Not sure</label>
-                                </div>
+                                <label id="number-label" for="number">Amount</label>
+                                <input type="number" name="amount" id="number"  class="form-control" >
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>This survey useful yes or no?</label>
-                                <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" class="custom-control-input" name="yes" value="yes" id="yes" checked="">
-                                    <label class="custom-control-label" for="yes">Yes</label>
-                                </div>
-                                <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" class="custom-control-input" name="no" value="no" id="no">
-                                    <label class="custom-control-label" for="no">No</label>
-                                </div>
+                                <label>Salary Status</label>
+                                <select id="dropdown" name="status" class="form-control" required>
+                                    <option disabled selected value>Select</option>
+                                    <option value="paid">paid</option>
+                                    <option value="due paid">partial paid</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-
-
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Leave Message</label>
-                                <textarea id="comments" class="form-control" name="comment" placeholder="Enter your comment here..."></textarea>
+                                <label id="number-label" for="number">Paid Amount</label>
+                                <input type="number" name="paid_amount" id="number" min="10" max="99" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Due Amount</label>
+                                <input type="number" name="due_amount" id="number" class="form-control" >
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="number-label" for="number">Salary Date</label>
+                                <input type="date" name="salary_date" id="number" class="form-control">
+                            </div>
+                        </div>
+                       
+                    </div>
+
+
 
                     <div class="row">
                         <div class="col-md-4">
-                            <button type="submit" id="submit" class="btn btn-primary btn-block">Submit Survey</button>
+                            <button type="submit" id="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
                         </div>
                     </div>
 

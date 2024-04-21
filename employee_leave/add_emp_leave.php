@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,31 +14,31 @@
     <link rel="stylesheet" href="../css/res.css">
     <link rel="stylesheet" href="../structure_css.css">
 
-<style>
-
- *{
-        margin: 0px;
-        padding: 0px;
-    }
-
-
-   
-    .l_container{
-      margin-top: 100px;
-    }
-    .l_container form {
-        background-color: skyblue;
-        box-shadow: 5px 5px 10px black;
-
-        box-sizing: border-box;
-        padding: 30px;
-        border-radius: 10px;
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
 
 
-    }
+
+        .l_container {
+            margin-top: 100px;
+        }
+
+        .l_container form {
+            background-color: skyblue;
+            box-shadow: 5px 5px 10px black;
+
+            box-sizing: border-box;
+            padding: 30px;
+            border-radius: 10px;
 
 
-    #success_message{
+        }
+
+
+        #success_message {
 
             height: auto;
             width: 100%;
@@ -45,14 +46,10 @@
             color: green;
 
 
-    }
-/* main work css end */
+        }
 
-
-
-
-
-</style>
+        /* main work css end */
+    </style>
 
 
 
@@ -61,42 +58,47 @@
 <?php
 
 
-        include '../connection.php';
+include '../connection.php';
+
+
+$empData = "SELECT * FROM employee";
+$empResult = mysqli_query($conn, $empData);
+
+$hProviderData = "SELECT * FROM healthcare_provider";
+$hProviderResult = mysqli_query($conn, $hProviderData);
+
+$success_message = "";
+if (isset($_POST['submit'])) {
+
+    $employee_id = $_POST['employee_id'];
+    $health_provider_id = $_POST['health_provider_id'];
+    $start_time = $_POST['start_time'];
+    $end_time = $_POST['end_time'];
+    $leave_reason = $_POST['leave_reason'];
 
 
 
-        $success_message = "";
-        if (isset($_POST['submit'])) {
-
-            $employee_id = $_POST['employee_id'];
-            $health_provider_id = $_POST['health_provider_id'];
-            $start_time = $_POST['start_time'];
-            $end_time = $_POST['end_time'];
-            $leave_reason = $_POST['leave_reason'];
-           
-
-
-            $sql = "INSERT INTO employee_leave(employee_id, h_provider_id,start_date, end_date, leave_reason ) VALUES
+    $sql = "INSERT INTO employee_leave(employee_id, h_provider_id,start_date, end_date, leave_reason ) VALUES
                         ('$employee_id', '$health_provider_id', '$start_time', '$end_time' , '$leave_reason')";
 
-            $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, $sql);
 
-            if ($result) {
-                // header("Location: healthcare_provider.php?msg=Record add successful");
-                session_reset();
-                $_SESSION['data'] = "Record add successful";
-                echo "<script>window.location.href='employee_leave.php' </script>";
-                $success_message = "successful";
-            } else {
-                $success_message = "not insert";
-                $success_message = "Error: " . mysqli_error($conn); 
-            }
-        }
+    if ($result) {
+        // header("Location: healthcare_provider.php?msg=Record add successful");
+        session_reset();
+        $_SESSION['data'] = "Employee Leave add successfully";
+        echo "<script>window.location.href='employee_leave.php' </script>";
+        $success_message = "successful";
+    } else {
+        $success_message = "not insert";
+        $success_message = "Error: " . mysqli_error($conn);
+    }
+}
 
 
-        $sql_dep_list = "SELECT * FROM department";
+$sql_dep_list = "SELECT * FROM department";
 
-        $result1= mysqli_query($conn, $sql_dep_list);
+$result1 = mysqli_query($conn, $sql_dep_list);
 
 
 
@@ -104,19 +106,19 @@
 
 
 
-  </head>
+</head>
 
 
 
-  <body>
+<body>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <?php
-    
-        include'../new_sidebar.php';
-        include'../new_navbar.php';
-    
+
+    include '../new_sidebar.php';
+    include '../new_navbar.php';
+
     ?>
 
 
@@ -124,59 +126,121 @@
 
     <main class="main">
 
-    <div class="azaira"></div>
+        <div class="azaira"></div>
 
-            <div class="l_container">
+        <div class="l_container">
 
 
-                <form action="add_emp_leave.php" method="post">
-                    <div class="signup_logo">
-                        <h1>Add New leave</h1>
+            <!-- <form action="add_emp_leave.php" method="post">
+                <div class="signup_logo">
+                    <h1>Add New leave</h1>
+                </div>
+
+
+
+                <div class="box">
+                    <label for="">Health Provider Id </label>
+                    <input type="text" name="health_provider_id">
+                </div>
+
+                <div class="box">
+                    <label for="">Start Time: </label>
+                    <input type="date" name="start_time">
+                </div>
+                <div class="box">
+                    <label for="">End Time: </label>
+                    <input type="date" name="end_time">
+                </div>
+
+
+                <div class="box">
+                    <label for="">Leave Reason: </label>
+                    <input type="text" name="leave_reason">
+                </div>
+
+                <div class="btn_box">
+                    <input type="submit" value="Add" name="submit"><a href="healthcare_provider.php"></a>
+                </div>
+
+                <div class="box">
+
+                    <label id="success_message"><i class="fa-solid fa-check" style="color: #178901; margin: 0px 15px"></i>
+                        <?php echo $success_message ?>
+                    </label>
+                </div>
+
+            </form> -->
+
+            <form action="add_emp_leave.php" method="post">
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md ">
+                        <div class="form-floating">
+
+                            <select id="dropdown" name="employee_id" class="form-control" required>
+                                <?php
+
+                                while ($row = mysqli_fetch_assoc($empResult)) {
+
+                                ?>
+                                    <option selected>Select Employee</option>
+                                    <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
+                                <?php
+                                }
+                                ?>
+
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="box">
-                        <label for="">Employee ID: </label>
-                        <input type="text" name="employee_id">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <select id="dropdown" name="health_provider_id" class="form-control" required>
+                                <?php
+
+                                while ($row = mysqli_fetch_assoc($hProviderResult)) {
+
+                                ?>
+                                    <option selected>Select Provider</option>
+                                    <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
+                                <?php
+                                }
+                                ?>
+
+                            </select>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="box">
-                        <label for="">Health Provider Id </label>
-                        <input type="text" name="health_provider_id">
-                    </div>
+                <div class="form-floating mb-3">
+                    <input name="start_time" type="date" class="form-control" id="floatingInput">
+                    <label for="floatingInput">Start Time</label>
+                </div>
 
-                    <div class="box">
-                        <label for="">Start Time: </label>
-                        <input type="date" name="start_time" >
-                    </div>
-                    <div class="box">
-                        <label for="">End Time: </label>
-                        <input type="date" name="end_time" >
-                    </div>
-                
+                <div class="form-floating mb-3">
+                    <input name="end_time" type="date" class="form-control" id="floatingInput">
+                    <label for="floatingInput">End Time</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input name="leave_reason" type="text" class="form-control" id="floatingInput">
+                    <label for="floatingInput">Leave Reason</label>
+                </div>
 
-                    <div class="box">
-                        <label for="">Leave Reason: </label>
-                        <input type="text" name="leave_reason">
-                    </div>
+                <div class="form-floating">
+                    <input name="submit" type="submit" class="btn btn-dark mb-4">
+                </div>
 
-                    <div class="btn_box">
-                        <input type="submit" value="Add" name="submit"><a href="healthcare_provider.php"></a>
-                    </div>
-
-                    <div class="box">
-                        
-                        <label id="success_message"><i class="fa-solid fa-check" style="color: #178901; margin: 0px 15px"></i>
-                            <?php echo $success_message ?>
-                        </label>
-                    </div>
-
-                </form>
+                <div class="box">
 
 
-            </div>
+                </div>
+            </form>
 
-                
-    
+
+        </div>
+
+
+
 
     </main>
 
@@ -189,42 +253,36 @@
     <!-- sidebar and navbar js file start -->
 
     <script>
+        const sidebar = document.querySelector(".sidebar");
+        const sidebarClose = document.querySelector("#sidebar-close");
+        const menu = document.querySelector(".menu-content");
+        const menuItems = document.querySelectorAll(".submenu-item");
+        const subMenuTitles = document.querySelectorAll(".submenu .menu-title");
 
+        sidebarClose.addEventListener("click", () => sidebar.classList.toggle("close"));
 
-                        const sidebar = document.querySelector(".sidebar");
-                        const sidebarClose = document.querySelector("#sidebar-close");
-                        const menu = document.querySelector(".menu-content");
-                        const menuItems = document.querySelectorAll(".submenu-item");
-                        const subMenuTitles = document.querySelectorAll(".submenu .menu-title");
+        menuItems.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                menu.classList.add("submenu-active");
+                item.classList.add("show-submenu");
+                menuItems.forEach((item2, index2) => {
+                    if (index !== index2) {
+                        item2.classList.remove("show-submenu");
+                    }
+                });
+            });
+        });
 
-                        sidebarClose.addEventListener("click", () => sidebar.classList.toggle("close"));
-
-                        menuItems.forEach((item, index) => {
-                        item.addEventListener("click", () => {
-                            menu.classList.add("submenu-active");
-                            item.classList.add("show-submenu");
-                            menuItems.forEach((item2, index2) => {
-                            if (index !== index2) {
-                                item2.classList.remove("show-submenu");
-                            }
-                            });
-                        });
-                        });
-
-                        subMenuTitles.forEach((title) => {
-                        title.addEventListener("click", () => {
-                            menu.classList.remove("submenu-active");
-                        });
-                        });
-
-
-
-
-
+        subMenuTitles.forEach((title) => {
+            title.addEventListener("click", () => {
+                menu.classList.remove("submenu-active");
+            });
+        });
     </script>
     <!-- sidebar and navbar js file end -->
 
 
 
-  </body>
+</body>
+
 </html>

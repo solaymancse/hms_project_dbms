@@ -6,29 +6,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>healthcare_provider</title>
+    <title>Employee List</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Fontawesome CDN Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="../structure_css.css">
-
-
-    <style>
-        .table tbody td:nth-child(4) {
-            max-width: 300px;
-            text-align: justify;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-
-        .table tbody td {
-            max-height: 300px;
-
-            border: 1px solid black;
-        }
-    </style>
 
 
 </head>
@@ -47,24 +31,8 @@ if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
 }
 
+$sql = "SELECT * from employee where e_type = 'Accountant'";
 
-$sql = "SELECT 
-            el.id,
-            e.first_name AS employee_first_name,
-            e.last_name AS employee_last_name,
-            hp.first_name AS provider_first_name,
-            hp.last_name AS provider_last_name,
-            el.amount,
-            el.paid_amount,
-            el.due_amount, /* Added due_amount */
-            el.salary_status,
-            el.salary_date
-        FROM 
-            salary AS el
-        LEFT JOIN 
-            employee AS e ON el.employee_id = e.id
-        LEFT JOIN 
-            healthcare_provider AS hp ON el.h_provider_id = hp.id";
 
 $result_table = mysqli_query($conn, $sql);
 
@@ -96,10 +64,10 @@ $result_table = mysqli_query($conn, $sql);
 
             <?php
 
-            if (isset($_GET['msg'])) {
+            if (isset($_GET['data'])) {
 
-                $msg = $_GET['msg'];
-                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                $msg = $_GET['data'];
+                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                 ' . $msg . '
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
@@ -110,7 +78,7 @@ $result_table = mysqli_query($conn, $sql);
 
 
             <div class="search_and-add_btn">
-                <a href="add_salary.php" class="btn btn-dark mb-4">Add New Salary</a>
+                <a href="add_employee.php" class="btn btn-dark mb-4">Add New</a>
 
                 <form action="" class="d-flex" method="post">
                     <input style="border: 1px solid black;" name="input_search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -127,13 +95,13 @@ $result_table = mysqli_query($conn, $sql);
             <table class="table table-hover text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">Employee</th>
-                        <th scope="col">HealthCare Provider</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Paid Amount</th>
-                        <th scope="col">Due Amount</th>
-                        <th scope="col">Salary Status</th>
-
+                        <th scope="col">Employee ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Date of Birth</th>
+                        <th scope="col">Qualification</th>
+                        <th scope="col">Phone Number</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -148,16 +116,16 @@ $result_table = mysqli_query($conn, $sql);
 
 
                         <tr>
-                        <td><?php echo $row['employee_first_name'] . ' ' . $row['employee_last_name']; ?></td>
-                            <td><?php echo $row['provider_first_name'] . ' ' . $row['provider_last_name']; ?></td>
-                            
-                            <td><?php echo $row['amount'] ?></th>
-                            <td><?php echo $row['paid_amount'] ?></th>
-                            <td><?php echo $row['due_amount'] ?></th>
-                            <td><?php echo $row['salary_status'] ?></th>
+                            <td><?php echo $row['id'] ?></th>
+                            <td><?php echo $row['first_name'] . " " . $row['last_name'] ?></th>
+                            <td><?php echo $row['e_type'] ?></th>
+                            <td><?php echo $row['email'] ?></th>
+                            <td><?php echo $row['DOB'] ?></th>
+                            <td><?php echo $row['qualification'] ?></th>
+                            <td><?php echo $row['phone_number'] ?></th>
                             <td>
 
-                                <a href="update_salary.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
+                                <a href="update_employee.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
                                 <button type="button" class="btn btn-danger delete-leave" data-id="<?php echo $row['id'] ?>" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="fa-solid fa-trash fs-5"></i></button>
 
                             </td>
@@ -173,17 +141,18 @@ $result_table = mysqli_query($conn, $sql);
 
                 </tbody>
             </table>
-        
+            <div>
+
+            </div>
+
+
+
 
 
 
     </main>
 
     <!-- main work end-->
-
-
-
-    <!-- Add this modal at the end of your HTML body -->
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -192,7 +161,7 @@ $result_table = mysqli_query($conn, $sql);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this Salaray?
+                    Are you sure you want to delete this Record?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -201,6 +170,7 @@ $result_table = mysqli_query($conn, $sql);
             </div>
         </div>
     </div>
+
 
 
     <script>
@@ -213,12 +183,16 @@ $result_table = mysqli_query($conn, $sql);
 
                     document.getElementById('confirmDelete').addEventListener('click', function() {
                         // Redirect to delete script with the deleteId parameter
-                        window.location.href = `delete_salary.php?id=${deleteId}`;
+                        window.location.href = `delete_employee.php?id=${deleteId}`;
                     });
                 });
             });
         });
     </script>
+
+
+
+
     <!-- sidebar and navbar js file start -->
 
     <script>

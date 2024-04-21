@@ -124,7 +124,7 @@ $result_table = mysqli_query($conn, $sql);
                             <td><?php echo $row['discount'] ?></th>
                             <td>
                                 <a href="./edit_lab.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                                <a href="#" class="btn btn-danger delete-patient" data-id="<?php echo $row['id'] ?>"><i class="fa-solid fa-trash fs-5"></i></a>
+                                <button type="button" class="btn btn-danger delete-leave" data-id="<?php echo $row['id'] ?>" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="fa-solid fa-trash fs-5"></i></button>
                             </td>
 
 
@@ -154,7 +154,42 @@ $result_table = mysqli_query($conn, $sql);
     <!-- main work end-->
 
 
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this Record?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const deleteButtons = document.querySelectorAll('.delete-leave');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const deleteId = button.getAttribute('data-id');
+
+                    document.getElementById('confirmDelete').addEventListener('click', function() {
+                        // Redirect to delete script with the deleteId parameter
+                        window.location.href = `lab_delete.php?id=${deleteId}`;
+                    });
+                });
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
