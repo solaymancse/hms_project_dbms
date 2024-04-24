@@ -23,6 +23,7 @@
 
 <?php
 
+session_start();
 include '../connection.php';
 
 $search = "";
@@ -31,7 +32,7 @@ if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
 }
 
-$sql = "SELECT * from employee";
+$sql = "SELECT * from employee ORDER BY id desc";
 
 
 $result_table = mysqli_query($conn, $sql);
@@ -120,7 +121,7 @@ $result_table = mysqli_query($conn, $sql);
                             <td><?php echo $row['first_name'] . " " . $row['last_name'] ?></th>
                             <td><?php echo $row['e_type'] ?></th>
                             <td><?php echo $row['email'] ?></th>
-                            <td><?php echo $row['DOB'] ?></th>
+                            <td><?php echo date('d-m-Y', strtotime($row['DOB'])); ?></th>
                             <td><?php echo $row['qualification'] ?></th>
                             <td><?php echo $row['phone_number'] ?></th>
                             <td>
@@ -153,6 +154,8 @@ $result_table = mysqli_query($conn, $sql);
     </main>
 
     <!-- main work end-->
+
+    <!-- Modal Open -->
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -173,6 +176,7 @@ $result_table = mysqli_query($conn, $sql);
 
 
 
+    <!-- delete JS script -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const deleteButtons = document.querySelectorAll('.delete-leave');

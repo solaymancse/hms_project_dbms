@@ -12,7 +12,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
-        header("Location: employee_leave.php?msg=Record deleted successful");
+        header("Location: employee_leave.php");
     } else {
         echo "Failed: ". mysqli_error($conn);
     }

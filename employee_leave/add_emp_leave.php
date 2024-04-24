@@ -56,7 +56,7 @@
 </head>
 
 <?php
-
+session_start();
 
 include '../connection.php';
 
@@ -68,6 +68,7 @@ $hProviderData = "SELECT * FROM healthcare_provider";
 $hProviderResult = mysqli_query($conn, $hProviderData);
 
 $success_message = "";
+
 if (isset($_POST['submit'])) {
 
     $employee_id = $_POST['employee_id'];
@@ -85,10 +86,9 @@ if (isset($_POST['submit'])) {
 
     if ($result) {
         // header("Location: healthcare_provider.php?msg=Record add successful");
-        session_reset();
         $_SESSION['data'] = "Employee Leave add successfully";
-        echo "<script>window.location.href='employee_leave.php' </script>";
-        $success_message = "successful";
+        header("Location: employee_leave.php");
+        exit();
     } else {
         $success_message = "not insert";
         $success_message = "Error: " . mysqli_error($conn);
@@ -129,47 +129,6 @@ $result1 = mysqli_query($conn, $sql_dep_list);
         <div class="azaira"></div>
 
         <div class="l_container">
-
-
-            <!-- <form action="add_emp_leave.php" method="post">
-                <div class="signup_logo">
-                    <h1>Add New leave</h1>
-                </div>
-
-
-
-                <div class="box">
-                    <label for="">Health Provider Id </label>
-                    <input type="text" name="health_provider_id">
-                </div>
-
-                <div class="box">
-                    <label for="">Start Time: </label>
-                    <input type="date" name="start_time">
-                </div>
-                <div class="box">
-                    <label for="">End Time: </label>
-                    <input type="date" name="end_time">
-                </div>
-
-
-                <div class="box">
-                    <label for="">Leave Reason: </label>
-                    <input type="text" name="leave_reason">
-                </div>
-
-                <div class="btn_box">
-                    <input type="submit" value="Add" name="submit"><a href="healthcare_provider.php"></a>
-                </div>
-
-                <div class="box">
-
-                    <label id="success_message"><i class="fa-solid fa-check" style="color: #178901; margin: 0px 15px"></i>
-                        <?php echo $success_message ?>
-                    </label>
-                </div>
-
-            </form> -->
 
             <form action="add_emp_leave.php" method="post">
 

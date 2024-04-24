@@ -17,7 +17,7 @@
 </head>
 
 <?php
-
+session_start(); 
 include '../connection.php';
 
 $search = "";
@@ -40,7 +40,10 @@ $sql = "SELECT
         LEFT JOIN 
             employee AS e ON el.employee_id = e.id
         LEFT JOIN 
-            healthcare_provider AS hp ON el.h_provider_id = hp.id";
+            healthcare_provider AS hp ON el.h_provider_id = hp.id
+            
+        ORDER BY el.id DESC
+        ";
 
 
 $result_table = mysqli_query($conn, $sql);
@@ -69,17 +72,13 @@ $result_table = mysqli_query($conn, $sql);
         <div class="container">
 
             <?php
-
-            if (isset($_GET['msg'])) {
-
-                $msg = $_GET['msg'];
+            if (isset($_SESSION['data'])) {
                 echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ' . $msg . '
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    ' . $_SESSION['data'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
+                unset($_SESSION['data']);
             }
-
-
             ?>
 
 
