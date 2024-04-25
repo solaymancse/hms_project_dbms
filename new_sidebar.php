@@ -112,7 +112,7 @@
             Salary</a>
           </li>
           <li class="item">
-            <a href="./paitient/lab.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+            <a href="../paitient/lab.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
             Lab Test</a>
           </li>
 

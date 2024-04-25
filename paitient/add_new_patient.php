@@ -58,12 +58,10 @@ if (isset($_POST['submit'])) {
     $dob = $_POST['DOB'];
     $p_num = $_POST['phone_number'];
     $address = $_POST['address'];
-    $balance_status = $_POST['balance_status'];
-    $due_balance = $_POST['due_balance'];
-    $paid_balance = $_POST['paid_balance'];
+  
 
-    $sql = "INSERT INTO patient(first_name, last_name, gender, phone_number, DOB, address, balance_status, due_balance, paid_balance) 
-            VALUES ('$f_name', '$l_name', '$gender', '$p_num', '$dob', '$address', '$balance_status', '$due_balance', '$paid_balance')";
+    $sql = "INSERT INTO patient(first_name, last_name, gender, phone_number, DOB, address) 
+            VALUES ('$f_name', '$l_name', '$gender', '$p_num', '$dob', '$address')";
 
     $result = mysqli_query($conn, $sql);
 
@@ -72,7 +70,7 @@ if (isset($_POST['submit'])) {
         header("Location: ./patient.php");
         exit();
     } else {
-        $success_message = "Failed to insert patient";
+        $_SESSION['data'] = "Failed to insert patient";
     }
 }
 ?>
@@ -141,18 +139,7 @@ if (isset($_POST['submit'])) {
                     <label for="email">Phone Number</label>
                     <input type="number" class="form-control" name="phone_number">
                 </div>
-                <div class="form-group">
-                    <label for="address">Balance Status :</label>
-                    <input type="number" class="form-control" name="balance_status">
-                </div>
-                <div class="form-group">
-                    <label for="income">Due Balance :</label>
-                    <input type="number" class="form-control" name="due_balance">
-                </div>
-                <div class="form-group">
-                    <label for="income">Paid Balance :</label>
-                    <input type="number" class="form-control" name="paid_balance">
-                </div>
+             
 
                 <input type="submit" name="submit" class="btn btn-primary" style="float:right">Submit</input>
             </form>

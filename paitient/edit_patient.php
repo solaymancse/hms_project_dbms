@@ -83,7 +83,7 @@ if (isset($_POST['submit'])) {
     first_name = '$f_name', Last_name = '$l_name',
     gender = '$gender', DOB = '$dob', phone_number = '$p_num',
     address = '$address', balance_status = '$balance_status', due_balance = $due_balance,
-    paid_balance = $paid_balance WHERE patient_id = '$id'";
+    paid_balance = $paid_balance WHERE id = '$id'";
 
 
 
@@ -120,7 +120,7 @@ if (isset($_POST['submit'])) {
     <?php
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
-        $sql = "SELECT * FROM patient WHERE patient_id = $id";
+        $sql = "SELECT * FROM patient WHERE id = $id";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
     }
