@@ -38,7 +38,7 @@
 
 
 <?php
-
+session_start();
 include '../connection.php';
 
 $search = "";
@@ -79,9 +79,9 @@ $result_table = mysqli_query($conn, $sql);
 
             <?php
 
-            if (isset($_GET['msg'])) {
+            if (isset($_SESSION['data'])) {
 
-                $msg = $_GET['msg'];
+                $msg = $_SESSION['data'];
                 echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
                 ' . $msg . '
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
