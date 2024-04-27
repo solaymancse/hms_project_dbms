@@ -34,7 +34,8 @@ $sql = "SELECT
             hp.last_name AS provider_last_name,
             el.start_date,
             el.end_date,
-            el.leave_reason
+            el.leave_reason,
+            el.status
         FROM 
             employee_leave AS el
         LEFT JOIN 
@@ -106,6 +107,7 @@ $result_table = mysqli_query($conn, $sql);
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
                         <th scope="col">Leave Reason</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -126,6 +128,7 @@ $result_table = mysqli_query($conn, $sql);
                             <td><?php echo $row['start_date'] ?></th>
                             <td><?php echo $row['end_date'] ?></th>
                             <td><?php echo $row['leave_reason'] ?></th>
+                            <td><?php echo $row['status'] ?></th>
 
                             <td>
 
