@@ -38,16 +38,18 @@
 
 
 <?php
+session_start();
 
 include '../connection.php';
 
 $search = "";
+$whereClause = "";
 
 if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
+    // Modify the WHERE clause to search by full name
+    $whereClause = "WHERE (CONCAT(e.first_name, ' ', e.last_name) LIKE '%$search%') OR (CONCAT(hp.first_name, ' ', hp.last_name) LIKE '%$search%')";
 }
-
-
 $sql = "SELECT 
             el.id,
             e.first_name AS employee_first_name,
@@ -56,7 +58,7 @@ $sql = "SELECT
             hp.last_name AS provider_last_name,
             el.amount,
             el.paid_amount,
-            el.due_amount, /* Added due_amount */
+            el.due_amount,
             el.salary_status,
             el.salary_date
         FROM 
@@ -64,7 +66,9 @@ $sql = "SELECT
         LEFT JOIN 
             employee AS e ON el.employee_id = e.id
         LEFT JOIN 
-            healthcare_provider AS hp ON el.h_provider_id = hp.id";
+            healthcare_provider AS hp ON el.h_provider_id = hp.id
+        $whereClause";
+
 
 $result_table = mysqli_query($conn, $sql);
 
@@ -95,17 +99,13 @@ $result_table = mysqli_query($conn, $sql);
         <div class="container">
 
             <?php
-
-            if (isset($_GET['msg'])) {
-
-                $msg = $_GET['msg'];
-                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                ' . $msg . '
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            if (isset($_SESSION['data'])) {
+                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    ' . $_SESSION['data'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
+                unset($_SESSION['data']);
             }
-
-
             ?>
 
 
@@ -148,9 +148,9 @@ $result_table = mysqli_query($conn, $sql);
 
 
                         <tr>
-                        <td><?php echo $row['employee_first_name'] . ' ' . $row['employee_last_name']; ?></td>
+                            <td><?php echo $row['employee_first_name'] . ' ' . $row['employee_last_name']; ?></td>
                             <td><?php echo $row['provider_first_name'] . ' ' . $row['provider_last_name']; ?></td>
-                            
+
                             <td><?php echo $row['amount'] ?></th>
                             <td><?php echo $row['paid_amount'] ?></th>
                             <td><?php echo $row['due_amount'] ?></th>
@@ -173,7 +173,7 @@ $result_table = mysqli_query($conn, $sql);
 
                 </tbody>
             </table>
-        
+
 
 
 

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -23,6 +24,10 @@ if (isset($_POST['submit'])) {
     if (mysqli_num_rows($result) == 1) {
         // User is authenticated as admin, redirect to structure.php
         $_SESSION['admin_logged_in'] = true;
+
+        // Set flag in local storage
+        echo '<script>localStorage.setItem("logged", "true");</script>';
+
         header('Location: ../structure.php');
         exit();
     } else {
@@ -79,6 +84,16 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </div>
+
+    <script>
+        // Check if the remember checkbox is checked and set flag in local storage accordingly
+        const rememberCheckbox = document.getElementById('remember');
+        if (rememberCheckbox.checked) {
+            localStorage.setItem('logged', 'true');
+        } else {
+            localStorage.removeItem('logged');
+        }
+    </script>
 </body>
 
 </html>

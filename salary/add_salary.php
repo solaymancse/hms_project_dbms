@@ -96,6 +96,7 @@
 
 
 <?php
+session_start();
 
 include '../connection.php';
 
@@ -124,7 +125,6 @@ if (isset($_POST['submit'])) {
 
     if ($result) {
         // header("Location: healthcare_provider.php?msg=Record add successful");
-        session_reset();
         $_SESSION['data'] = "New Salary add successful";
         echo "<script>window.location.href='all_salary.php' </script>";
         // $success_message = "successful";

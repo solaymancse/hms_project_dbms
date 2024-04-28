@@ -96,6 +96,7 @@
 
 
 <?php
+session_start();
 
 include '../connection.php';
 
@@ -135,11 +136,11 @@ if (isset($_POST['submit'])) {
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
-        // header("Location: healthcare_provider.php?msg=Record add successful");
-        session_reset();
+    
         $_SESSION['data'] = "update Salary successful";
         echo "<script>window.location.href='all_salary.php' </script>";
         // $success_message = "successful";
+        exit();
     } else {
         $_SESSION['data'] = "New Salary add failed";
         // $success_message = "failed";

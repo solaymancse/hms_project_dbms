@@ -32,14 +32,24 @@ if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
 }
 
-$sql = "SELECT lab_test.id, patient.first_name , patient.last_name AS patient_name, healthcare_provider.first_name , healthcare_provider.last_name AS provider_name, lab_test.title, lab_test.STATUS, lab_test.discount FROM lab_test
+$sql = "SELECT lab_test.id, 
+               CONCAT(patient.first_name, ' ', patient.last_name) AS patient_name, 
+               CONCAT(healthcare_provider.first_name, ' ', healthcare_provider.last_name) AS provider_name, 
+               test_category.name AS test_name,
+               test_category.price AS test_price,
+               lab_test.title, 
+               lab_test.STATUS, 
+               lab_test.discount, 
+               lab_test.paid, 
+               lab_test.due_amount 
+        FROM lab_test
         LEFT JOIN patient ON lab_test.patient_id = patient.id
-        LEFT JOIN healthcare_provider ON lab_test.h_provider_id = healthcare_provider.id";
+        LEFT JOIN healthcare_provider ON lab_test.h_provider_id = healthcare_provider.id
+        LEFT JOIN test_category ON lab_test.test_id = test_category.id";
 
 $result_table = mysqli_query($conn, $sql);
-
-
 ?>
+
 
 
 
@@ -97,9 +107,11 @@ $result_table = mysqli_query($conn, $sql);
                         <th scope="col">ID</th>
                         <th scope="col">Patient Name</th>
                         <th scope="col">Health Provider</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Staus</th>
-                        <th scope="col">Discount</th>
+                        <th scope="col">Test Name</th>
+                        <th scope="col">Price ($)</th>
+                        <th scope="col">Discount ($)</th>
+                        <th scope="col">Paid ($)</th>
+                        <th scope="col">Due Amount ($)</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -114,14 +126,14 @@ $result_table = mysqli_query($conn, $sql);
 
 
                         <tr>
-                            <td><?php echo $row['id'] ?></th>
-                            <td><?php echo $row['patient_name'] ?></th>
-                            <td><?php echo $row['provider_name'] ?></th>
-
-
-                            <td><?php echo $row['title'] ?></th>
-                            <td><?php echo $row['STATUS'] ?></th>
-                            <td><?php echo $row['discount'] ?></th>
+                            <td><?php echo $row['id'] ?></td>
+                            <td><?php echo $row['patient_name'] ?></td>
+                            <td><?php echo $row['provider_name'] ?></td>
+                            <td><?php echo $row['test_name'] ?></td>
+                            <td><?php echo $row['test_price'] ?></td>
+                            <td><?php echo $row['discount'] ?></td>
+                            <td><?php echo $row['paid'] ?></td>
+                            <td><?php echo $row['due_amount'] ?></td>
                             <td>
                                 <a href="./edit_lab.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
                                 <button type="button" class="btn btn-danger delete-leave" data-id="<?php echo $row['id'] ?>" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="fa-solid fa-trash fs-5"></i></button>
