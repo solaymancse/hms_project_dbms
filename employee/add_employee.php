@@ -60,14 +60,15 @@
             $f_name = $_POST['f_name'];
             $l_name = $_POST['l_name'];
             $email = $_POST['e_mail'];
+            $salary = $_POST['salary'];
             $type = $_POST['e_type'];
             $dob = $_POST['e_DOB'];
             $qual = $_POST['e_qualification'];
             $p_num = $_POST['e_phone_number'];
 
 
-            $sql = "INSERT INTO employee(first_name, last_name,email, DOB, e_type , qualification, phone_number) VALUES
-                        ('$f_name', '$l_name', '$email' , '$dob' , '$type', '$qual', '$p_num')";
+            $sql = "INSERT INTO employee(first_name, last_name,email, salary, DOB, e_type , qualification, phone_number) VALUES
+                        ('$f_name', '$l_name', '$email' ,$salary, '$dob' , '$type', '$qual', '$p_num')";
 
             $result = mysqli_query($conn, $sql);
 
@@ -133,6 +134,10 @@
                     <div class="form-floating mb-3">
                         <input name="e_mail" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input name="salary" type="number" class="form-control" id="floatingInput" placeholder="Salary">
+                        <label for="floatingInput">Salary</label>
                     </div>
 
                     <div class="form-floating mb-3">

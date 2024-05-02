@@ -100,6 +100,7 @@ $result_table = mysqli_query($conn, $sql);
                         <th scope="col">Name</th>
                         <th scope="col">Type</th>
                         <th scope="col">Email</th>
+                        <th scope="col">Salary ($)</th>
                         <th scope="col">Date of Birth</th>
                         <th scope="col">Qualification</th>
                         <th scope="col">Phone Number</th>
@@ -121,6 +122,7 @@ $result_table = mysqli_query($conn, $sql);
                             <td><?php echo $row['first_name'] . " " . $row['last_name'] ?></th>
                             <td><?php echo $row['e_type'] ?></th>
                             <td><?php echo $row['email'] ?></th>
+                            <td><?php echo $row['salary'] ?></th>
                             <td><?php echo date('d-m-Y', strtotime($row['DOB'])); ?></th>
                             <td><?php echo $row['qualification'] ?></th>
                             <td><?php echo $row['phone_number'] ?></th>

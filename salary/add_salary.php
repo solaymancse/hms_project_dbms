@@ -161,9 +161,27 @@ if (isset($_POST['submit'])) {
 
 
             <div class="form-wrap">
-                
+
                 <form action="" method="post">
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Provider</label>
+                                <select id="dropdown" name="h_provider_id" class="form-control" required>
+                                    <?php
+
+                                    while ($row = mysqli_fetch_assoc($hProviderResult)) {
+
+                                    ?>
+
+                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Employee</label>
@@ -174,7 +192,7 @@ if (isset($_POST['submit'])) {
                                     while ($row = mysqli_fetch_assoc($empResult)) {
 
                                     ?>
-                                     
+
                                         <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
                                     <?php
                                     }
@@ -183,55 +201,36 @@ if (isset($_POST['submit'])) {
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Provider</label>
-                                <select id="dropdown" name="h_provider_id" class="form-control" required>
-                                    <?php
 
-                                    while ($row = mysqli_fetch_assoc($hProviderResult)) {
-
-                                    ?>
-                                      
-                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="number-label" for="number">Amount</label>
-                                <input type="number" name="amount" id="number"  class="form-control" >
+                                <label id="number-label" for="number">Basic Salary</label>
+                                <input type="number" id="salary" name="salary" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Salary Status</label>
-                                <select id="dropdown" name="status" class="form-control" required>
-                                    <option disabled selected value>Select</option>
-                                    <option value="paid">paid</option>
-                                    <option value="due paid">partial paid</option>
-                                </select>
+                                <div class="form-group">
+                                    <label id="number-label" for="number">Bonus</label>
+                                    <input type="number" id="bonus" name="bonus" class="form-control">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="number-label" for="number">Paid Amount</label>
-                                <input type="number" name="paid_amount" id="number" min="10" max="99" class="form-control">
+                                <label id="number-label" for="number">Deduction</label>
+                                <input type="number" id="deduction" name="deduction" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Due Amount</label>
-                                <input type="number" name="due_amount" id="number" class="form-control" >
+                                <label>Paid Amount</label>
+                                <input type="number" id="total_amount" name="total_amount" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -242,7 +241,7 @@ if (isset($_POST['submit'])) {
                                 <input type="date" name="salary_date" id="number" class="form-control">
                             </div>
                         </div>
-                       
+
                     </div>
 
 
@@ -266,9 +265,35 @@ if (isset($_POST['submit'])) {
 
     <!-- main work end-->
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+    <script>
+        // Function to update salary based on selected employee
+        document.getElementById('employee_id').addEventListener('change', function() {
+            var employeeId = this.value;
+            fetch('get_employee_salary.php?id=' + employeeId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('salary').value = data.salary;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
 
+        // Function to calculate total amount dynamically
+        function calculateTotalAmount() {
+            var salary = parseFloat(document.getElementById('salary').value) || 0;
+            var bonus = parseFloat(document.getElementById('bonus').value) || 0;
+            var deduction = parseFloat(document.getElementById('deduction').value) || 0;
+            var totalAmount = salary + bonus - deduction;
+            document.getElementById('total_amount').value = totalAmount.toFixed(2);
+        }
 
+        // Add event listeners to inputs to trigger calculation
+        document.getElementById('bonus').addEventListener('input', calculateTotalAmount);
+        document.getElementById('deduction').addEventListener('input', calculateTotalAmount);
+    </script>
 
     <!-- sidebar and navbar js file start -->
 
