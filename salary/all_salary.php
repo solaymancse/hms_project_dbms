@@ -58,9 +58,10 @@ $sql = "SELECT
             hp.last_name AS provider_last_name,
             el.amount,
             el.paid_amount,
-            el.due_amount,
             el.salary_status,
-            el.salary_date
+            el.salary_date,
+            el.bonus,
+            el.deduction
         FROM 
             salary AS el
         LEFT JOIN 
@@ -131,7 +132,8 @@ $result_table = mysqli_query($conn, $sql);
                         <th scope="col">HealthCare Provider</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Paid Amount</th>
-                        <th scope="col">Due Amount</th>
+                        <th scope="col">Bonus</th>
+                        <th scope="col">Deduction</th>
                         <th scope="col">Salary Status</th>
 
                         <th scope="col">Action</th>
@@ -153,7 +155,8 @@ $result_table = mysqli_query($conn, $sql);
 
                             <td><?php echo $row['amount'] ?></th>
                             <td><?php echo $row['paid_amount'] ?></th>
-                            <td><?php echo $row['due_amount'] ?></th>
+                            <td><?php echo $row['bonus'] ?></th>
+                            <td><?php echo $row['deduction'] ?></th>
                             <td><?php echo $row['salary_status'] ?></th>
                             <td>
 

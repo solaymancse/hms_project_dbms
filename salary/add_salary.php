@@ -91,77 +91,46 @@
 
 </head>
 
-
-
-
-
-<?php
-session_start();
-
-include '../connection.php';
-
-
-$empData = "SELECT * FROM employee";
-$empResult = mysqli_query($conn, $empData);
-
-$hProviderData = "SELECT * FROM healthcare_provider";
-$hProviderResult = mysqli_query($conn, $hProviderData);
-
-if (isset($_POST['submit'])) {
-
-
-    $employee_id = $_POST['employee_id'];
-    $h_provider_id = $_POST['h_provider_id'];
-    $amount = $_POST['amount'];
-    $status = $_POST['status'];
-    $paid_amount = $_POST['paid_amount'];
-    $due_amount = $_POST['due_amount'];
-    $salary_date = $_POST['salary_date'];
-
-
-    $sql = "INSERT INTO salary (employee_id, h_provider_id, amount, salary_status, paid_amount, due_amount, salary_date) VALUES ('$employee_id', '$h_provider_id', '$amount','$status', '$paid_amount', '$due_amount','$salary_date')";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        // header("Location: healthcare_provider.php?msg=Record add successful");
-        $_SESSION['data'] = "New Salary add successful";
-        echo "<script>window.location.href='all_salary.php' </script>";
-        // $success_message = "successful";
-    } else {
-        $_SESSION['data'] = "New Salary add failed";
-        // $success_message = "failed";
-    }
-}
-
-
-?>
-
-
-
 <body>
+
+    <?php
+    session_start();
+    include '../connection.php';
+    $empData = "SELECT * FROM employee";
+    $empResult = mysqli_query($conn, $empData);
+    $hProviderData = "SELECT * FROM healthcare_provider";
+    $hProviderResult = mysqli_query($conn, $hProviderData);
+    if (isset($_POST['submit'])) {
+        $employee_id = $_POST['employee_id'];
+        $h_provider_id = $_POST['h_provider_id'];
+        $amount = $_POST['amount'];
+        $status = $_POST['status'];
+        $paid_amount = $_POST['paid_amount'];
+        $due_amount = $_POST['due_amount'];
+        $salary_date = $_POST['salary_date'];
+        $sql = "INSERT INTO salary (employee_id, h_provider_id, amount, salary_status, paid_amount, due_amount, salary_date) VALUES ('$employee_id', '$h_provider_id', '$amount','$status', '$paid_amount', '$due_amount','$salary_date')";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $_SESSION['data'] = "New Salary add successful";
+            echo "<script>window.location.href='all_salary.php' </script>";
+        } else {
+            $_SESSION['data'] = "New Salary add failed";
+        }
+    }
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <?php
-
     include '../new_sidebar.php';
     include '../new_navbar.php';
-
     ?>
 
-
     <!-- main work start-->
-
     <main class="main">
-
         <div class="azaira"></div>
-
         <div class="l_container">
-
-
             <div class="form-wrap">
-
                 <form action="" method="post">
                     <div class="row">
                         <div class="col-md-6">
@@ -169,41 +138,31 @@ if (isset($_POST['submit'])) {
                                 <label>Provider</label>
                                 <select id="dropdown" name="h_provider_id" class="form-control" required>
                                     <?php
-
                                     while ($row = mysqli_fetch_assoc($hProviderResult)) {
-
                                     ?>
-
                                         <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
                                     <?php
                                     }
                                     ?>
-
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Employee</label>
-                                <select id="dropdown" name="employee_id" class="form-control" required>
+                                <select id="employee_id" name="employee_id" class="form-control" required>
                                     <option disabled selected value>Select</option>
                                     <?php
-
                                     while ($row = mysqli_fetch_assoc($empResult)) {
-
                                     ?>
-
-                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
+                                        <option value="<?php echo $row['id'] ?>" data-salary="<?php echo $row['salary'] ?>"><?php echo $row['first_name'] . " " . $row['last_name'] ?></option>
                                     <?php
                                     }
                                     ?>
-
                                 </select>
                             </div>
                         </div>
-
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -241,62 +200,63 @@ if (isset($_POST['submit'])) {
                                 <input type="date" name="salary_date" id="number" class="form-control">
                             </div>
                         </div>
-
                     </div>
-
-
-
                     <div class="row">
                         <div class="col-md-4">
                             <button type="submit" id="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
                         </div>
                     </div>
-
                 </form>
             </div>
-
         </div>
-
-
-
-
-
     </main>
-
     <!-- main work end-->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
     <script>
-        // Function to update salary based on selected employee
-        document.getElementById('employee_id').addEventListener('change', function() {
-            var employeeId = this.value;
-            fetch('get_employee_salary.php?id=' + employeeId)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('salary').value = data.salary;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    document.addEventListener("DOMContentLoaded", function() {
+        var employeeDropdown = document.getElementById('employee_id');
+        var salaryInput = document.getElementById('salary');
+        var bonusInput = document.getElementById('bonus');
+        var deductionInput = document.getElementById('deduction');
+        var totalAmountInput = document.getElementById('total_amount');
+
+        employeeDropdown.addEventListener('change', function() {
+            var selectedOption = employeeDropdown.options[employeeDropdown.selectedIndex];
+            var basicSalary = selectedOption.dataset.salary;
+            salaryInput.value = basicSalary;
+            updateTotalAmount();
         });
 
-        // Function to calculate total amount dynamically
-        function calculateTotalAmount() {
-            var salary = parseFloat(document.getElementById('salary').value) || 0;
-            var bonus = parseFloat(document.getElementById('bonus').value) || 0;
-            var deduction = parseFloat(document.getElementById('deduction').value) || 0;
-            var totalAmount = salary + bonus - deduction;
-            document.getElementById('total_amount').value = totalAmount.toFixed(2);
+        bonusInput.addEventListener('input', function() {
+            updateTotalAmount();
+        });
+
+        deductionInput.addEventListener('input', function() {
+            updateTotalAmount();
+            validateDeductionInput();
+        });
+
+        function updateTotalAmount() {
+            var basicSalary = parseFloat(salaryInput.value) || 0;
+            var bonus = parseFloat(bonusInput.value) || 0;
+            var deduction = parseFloat(deductionInput.value) || 0;
+            var totalAmount = basicSalary + bonus - deduction;
+            totalAmountInput.value = totalAmount.toFixed(2);
         }
 
-        // Add event listeners to inputs to trigger calculation
-        document.getElementById('bonus').addEventListener('input', calculateTotalAmount);
-        document.getElementById('deduction').addEventListener('input', calculateTotalAmount);
-    </script>
+        function validateDeductionInput() {
+            var deductionValue = parseFloat(deductionInput.value) || 0;
+            if (deductionValue < 0) {
+                deductionInput.value = Math.abs(deductionValue);
+            }
+        }
+    });
+</script>
+
+
+
 
     <!-- sidebar and navbar js file start -->
-
     <script>
         const sidebar = document.querySelector(".sidebar");
         const sidebarClose = document.querySelector("#sidebar-close");
@@ -325,8 +285,6 @@ if (isset($_POST['submit'])) {
         });
     </script>
     <!-- sidebar and navbar js file end -->
-
-
 
 </body>
 
