@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
     $paid_amount = $_POST['paid_amount'];
     $due_amount = $_POST['due_amount'];
 
-    $sql = "INSERT INTO lab_test (patient_id, h_provider_id, test_id,discount,total_amount, paid, due_amount) VALUES ('$patient_id', '$h_provider_id', '$catagory', '$discount','$total_amount', '$paid_amount', '$due_amount')";
+    $sql = "INSERT INTO lab_test (patient_id, h_provider_id, test_id,STATUS,discount,total_amount, paid, due_amount) VALUES ('$patient_id', '$h_provider_id', '$catagory', 'pending','$discount','$total_amount', '$paid_amount', '$due_amount')";
 
     $result = mysqli_query($conn, $sql);
 

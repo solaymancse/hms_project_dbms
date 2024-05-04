@@ -126,13 +126,14 @@ if (isset($_POST['submit'])) {
     $employee_id = $_POST['employee_id'];
     $h_provider_id = $_POST['h_provider_id'];
     $amount = $_POST['amount'];
+    $total_amount = $_POST['paid_amount'];
+    $bonus = $_POST['bonus'];
     $status = $_POST['status'];
-    $paid_amount = $_POST['paid_amount'];
-    $due_amount = $_POST['due_amount'];
+    $deduction = $_POST['deduction'];
     $salary_date = $_POST['salary_date'];
 
 
-    $sql = "UPDATE salary SET employee_id='$employee_id', h_provider_id='$h_provider_id', amount='$amount', salary_status='$status', paid_amount='$paid_amount', due_amount='$due_amount', salary_date='$salary_date' WHERE id='$id'";
+    $sql = "UPDATE salary SET employee_id='$employee_id', h_provider_id='$h_provider_id', amount='$amount', salary_status='$status', paid_amount='$total_amount', bonus='$bonus', deduction='$deduction', salary_date='$salary_date' WHERE id='$id'";
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
@@ -179,7 +180,7 @@ if (isset($_POST['submit'])) {
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Employee</label>
-                                <select id="dropdown" name="employee_id" class="form-control" required>
+                                <select id="employee_id" name="employee_id" class="form-control" required>
                                     <option disabled selected value>Select</option>
                                     <?php
                                     while ($patient_row = mysqli_fetch_assoc($empResult)) {
@@ -209,8 +210,8 @@ if (isset($_POST['submit'])) {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="number-label" for="number">Amount</label>
-                                <input value="<?php echo $row['amount'] ?? ''; ?>" type="number" name="amount" id="number" class="form-control">
+                                <label id="number-label" for="number">Basic Salary</label>
+                                <input value="<?php echo $row['amount'] ?? ''; ?>" type="number" name="amount" id="salary" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -228,17 +229,23 @@ if (isset($_POST['submit'])) {
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label id="number-label" for="number">Paid Amount</label>
-                                <input value="<?php echo $row['paid_amount'] ?? ''; ?>" type="number" name="paid_amount" id="number" class="form-control">
+                                <input value="<?php echo $row['paid_amount'] ?? ''; ?>" type="number" name="paid_amount" id="total_amount" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Due Amount</label>
-                                <input value="<?php echo $row['due_amount'] ?? ''; ?>" type="number" name="due_amount" id="number" class="form-control">
+                                <label>Bonus</label>
+                                <input value="<?php echo $row['bonus'] ?? ''; ?>" type="number" name="bonus" id="bonus" class="form-control">
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="number-label" for="number">Deduction</label>
+                                <input value="<?php echo $row['deduction'] ?? ''; ?>" type="number" name="deduction" id="deduction" class="form-control">
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label id="number-label" for="number">Salary Date</label>
@@ -271,7 +278,46 @@ if (isset($_POST['submit'])) {
 
 
 
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var employeeDropdown = document.getElementById('employee_id');
+        var salaryInput = document.getElementById('salary');
+        var bonusInput = document.getElementById('bonus');
+        var deductionInput = document.getElementById('deduction');
+        var totalAmountInput = document.getElementById('total_amount');
 
+        employeeDropdown.addEventListener('change', function() {
+            var selectedOption = employeeDropdown.options[employeeDropdown.selectedIndex];
+            var basicSalary = selectedOption.dataset.salary;
+            salaryInput.value = basicSalary;
+            updateTotalAmount();
+        });
+
+        bonusInput.addEventListener('input', function() {
+            updateTotalAmount();
+        });
+
+        deductionInput.addEventListener('input', function() {
+            updateTotalAmount();
+            validateDeductionInput();
+        });
+
+        function updateTotalAmount() {
+            var basicSalary = parseFloat(salaryInput.value) || 0;
+            var bonus = parseFloat(bonusInput.value) || 0;
+            var deduction = parseFloat(deductionInput.value) || 0;
+            var totalAmount = basicSalary + bonus - deduction;
+            totalAmountInput.value = totalAmount.toFixed(2);
+        }
+
+        function validateDeductionInput() {
+            var deductionValue = parseFloat(deductionInput.value) || 0;
+            if (deductionValue < 0) {
+                deductionInput.value = Math.abs(deductionValue);
+            }
+        }
+    });
+</script>
 
     <!-- sidebar and navbar js file start -->
 

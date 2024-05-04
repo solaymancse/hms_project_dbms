@@ -96,19 +96,22 @@
     <?php
     session_start();
     include '../connection.php';
+
     $empData = "SELECT * FROM employee";
     $empResult = mysqli_query($conn, $empData);
+
     $hProviderData = "SELECT * FROM healthcare_provider";
     $hProviderResult = mysqli_query($conn, $hProviderData);
+
     if (isset($_POST['submit'])) {
         $employee_id = $_POST['employee_id'];
         $h_provider_id = $_POST['h_provider_id'];
-        $amount = $_POST['amount'];
-        $status = $_POST['status'];
-        $paid_amount = $_POST['paid_amount'];
-        $due_amount = $_POST['due_amount'];
+        $amount = $_POST['salary'];
+        $total_amount = $_POST['total_amount'];
+        $bonus = $_POST['bonus'];
+        $deduction = $_POST['deduction'];
         $salary_date = $_POST['salary_date'];
-        $sql = "INSERT INTO salary (employee_id, h_provider_id, amount, salary_status, paid_amount, due_amount, salary_date) VALUES ('$employee_id', '$h_provider_id', '$amount','$status', '$paid_amount', '$due_amount','$salary_date')";
+        $sql = "INSERT INTO salary (employee_id, h_provider_id, amount, salary_status, paid_amount, bonus, deduction, salary_date) VALUES ('$employee_id', '$h_provider_id', '$amount','paid', '$total_amount', '$bonus','$deduction','$salary_date')";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['data'] = "New Salary add successful";
@@ -166,14 +169,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="number-label" for="number">Basic Salary</label>
+                                <label id="number-label" for="number">Basic Salary ($)</label>
                                 <input type="number" id="salary" name="salary" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-group">
-                                    <label id="number-label" for="number">Bonus</label>
+                                    <label id="number-label" for="number">Bonus ($)</label>
                                     <input type="number" id="bonus" name="bonus" class="form-control">
                                 </div>
                             </div>
@@ -182,13 +185,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="number-label" for="number">Deduction</label>
+                                <label id="number-label" for="number">Deduction ($)</label>
                                 <input type="number" id="deduction" name="deduction" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Paid Amount</label>
+                                <label>Paid Amount ($)</label>
                                 <input type="number" id="total_amount" name="total_amount" class="form-control" readonly>
                             </div>
                         </div>

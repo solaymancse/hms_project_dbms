@@ -15,22 +15,6 @@
     <link rel="stylesheet" href="../structure_css.css">
 
 
-    <style>
-        .table tbody td:nth-child(4) {
-            max-width: 300px;
-            text-align: justify;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-
-        .table tbody td {
-            max-height: 300px;
-
-            border: 1px solid black;
-        }
-    </style>
-
-
 </head>
 
 
@@ -43,38 +27,29 @@ session_start();
 include '../connection.php';
 
 $search = "";
-$whereClause = "";
 
 if (isset($_POST['search'])) {
     $search = $_POST['input_search'];
-    // Modify the WHERE clause to search by full name
-    $whereClause = "WHERE (CONCAT(e.first_name, ' ', e.last_name) LIKE '%$search%') OR (CONCAT(hp.first_name, ' ', hp.last_name) LIKE '%$search%')";
 }
-$sql = "SELECT 
-            el.id,
-            e.first_name AS employee_first_name,
-            e.last_name AS employee_last_name,
-            hp.first_name AS provider_first_name,
-            hp.last_name AS provider_last_name,
-            el.amount,
-            el.paid_amount,
-            el.salary_status,
-            el.salary_date,
-            el.bonus,
-            el.deduction
-        FROM 
-            salary AS el
-        LEFT JOIN 
-            employee AS e ON el.employee_id = e.id
-        LEFT JOIN 
-            healthcare_provider AS hp ON el.h_provider_id = hp.id
-        $whereClause";
 
+$sql = "SELECT lab_test.id, 
+               CONCAT(patient.first_name, ' ', patient.last_name) AS patient_name, 
+               CONCAT(healthcare_provider.first_name, ' ', healthcare_provider.last_name) AS provider_name, 
+               test_category.name AS test_name,
+               test_category.price AS test_price,
+               lab_test.title, 
+               lab_test.STATUS, 
+               lab_test.discount, 
+               lab_test.paid, 
+               lab_test.due_amount 
+        FROM lab_test
+        LEFT JOIN patient ON lab_test.patient_id = patient.id
+        LEFT JOIN healthcare_provider ON lab_test.h_provider_id = healthcare_provider.id
+        LEFT JOIN test_category ON lab_test.test_id = test_category.id";
 
 $result_table = mysqli_query($conn, $sql);
-
-
 ?>
+
 
 
 
@@ -110,33 +85,18 @@ $result_table = mysqli_query($conn, $sql);
             ?>
 
 
-            <div class="search_and-add_btn">
-                <a href="add_salary.php" class="btn btn-dark mb-4">Add New Salary</a>
 
-                <form action="" class="d-flex" method="post">
-                    <input style="border: 1px solid black;" name="input_search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <input type="Submit" value="Search" name="search" class="btn btn-dark" id="">
-                    </a>
-                </form>
-
-
-
-            </div>
 
 
 
             <table class="table table-hover text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">Employee</th>
-                        <th scope="col">HealthCare Provider</th>
-                        <th scope="col">Amount ($)</th>
-                        <th scope="col">Paid Amount  ($)</th>
-                        <th scope="col">Bonus  ($)</th>
-                        <th scope="col">Deduction  ($)</th>
-                        <th scope="col">Salary Status</th>
-                        <th scope="col">Payment Month</th>
-
+                        <th scope="col">ID</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Health Provider</th>
+                        <th scope="col">Test Name</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -151,21 +111,16 @@ $result_table = mysqli_query($conn, $sql);
 
 
                         <tr>
-                            <td><?php echo $row['employee_first_name'] . ' ' . $row['employee_last_name']; ?></td>
-                            <td><?php echo $row['provider_first_name'] . ' ' . $row['provider_last_name']; ?></td>
-
-                            <td><?php echo $row['amount'] ?></th>
-                            <td><?php echo $row['paid_amount'] ?></th>
-                            <td><?php echo $row['bonus'] ?></th>
-                            <td><?php echo $row['deduction'] ?></th>
-                            <td><?php echo $row['salary_status'] ?></th>
-                            <td><?php echo date('d M, Y', strtotime($row['salary_date'])); ?></td>
+                            <td><?php echo $row['id'] ?></td>
+                            <td><?php echo $row['patient_name'] ?></td>
+                            <td><?php echo $row['provider_name'] ?></td>
+                            <td><?php echo $row['test_name'] ?></td>
+                            <td><?php echo $row['STATUS'] ?></td>
                             <td>
-
-                                <a href="update_salary.php?id=<?php echo $row['id'] ?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                                <button type="button" class="btn btn-danger delete-leave" data-id="<?php echo $row['id'] ?>" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="fa-solid fa-trash fs-5"></i></button>
-
+                               
+                                <a href="deliver_report.php?id=<?php echo $row['id'] ?>" class="btn btn-primary">Deliver</a>
                             </td>
+
 
                         <tr>
 
@@ -178,6 +133,12 @@ $result_table = mysqli_query($conn, $sql);
 
                 </tbody>
             </table>
+            <div>
+
+            </div>
+
+
+
 
 
 
@@ -187,8 +148,6 @@ $result_table = mysqli_query($conn, $sql);
     <!-- main work end-->
 
 
-
-    <!-- Add this modal at the end of your HTML body -->
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -197,7 +156,7 @@ $result_table = mysqli_query($conn, $sql);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this Salaray?
+                    Are you sure you want to delete this Record?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -206,6 +165,7 @@ $result_table = mysqli_query($conn, $sql);
             </div>
         </div>
     </div>
+
 
 
     <script>
@@ -218,12 +178,35 @@ $result_table = mysqli_query($conn, $sql);
 
                     document.getElementById('confirmDelete').addEventListener('click', function() {
                         // Redirect to delete script with the deleteId parameter
-                        window.location.href = `delete_salary.php?id=${deleteId}`;
+                        window.location.href = `lab_delete.php?id=${deleteId}`;
                     });
                 });
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const deleteButtons = document.querySelectorAll('.delete-patient');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior
+
+                    const patientId = button.getAttribute('data-id');
+
+                    // Ask for confirmation before deleting
+                    const isConfirmed = confirm('Are you sure you want to delete this patient?');
+
+                    if (isConfirmed) {
+                        // Redirect to delete_patient.php with patient_id parameter
+                        window.location.href = `./patient_delete.php?id=${patientId}`;
+                    }
+                });
+            });
+        });
+    </script>
+
     <!-- sidebar and navbar js file start -->
 
     <script>

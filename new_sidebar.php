@@ -145,6 +145,16 @@
               <a href="../paitient/category.php"><i class="fa-solid fa-address-card fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
                 Test Category</a>
             </li>
+            <?php
+            // Check if user is logged in
+            if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in']) {
+              echo '
+                        <li class="item">
+                            <a href="../paitient/approve_test.php"><i class="fa-solid fa-bed-pulse fa-beat-fade" style="color: #FFD43B;"></i> &nbsp;
+                                Pending Reports</a>
+                        </li>';
+            }
+            ?>
           </ul>
         </li>
 
